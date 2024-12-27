@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Finder</title>
+</head>
+<body>
+    <h1>Job Finder</h1>
+    <form id="upload-form" enctype="multipart/form-data">
+        <label for="resume">Upload your resume (PDF):</label>
+        <input type="file" id="resume" name="resume" accept="application/pdf" required>
+        <button type="submit">Find Jobs</button>
+    </form>
+    <div id="results"></div>
+
+    <script>
+        document.getElementById('upload-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const formData = new FormData();
+            const fileInput = document.getElementById('resume');
+            formData.append('resume', fileInput.files[0]);
+
+            const response = await fetch('http://127.0.0.1:5000/upload', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = `<h2>${data.message}</h2>`;
+        });
+    </script>
+</body>
+</html>
